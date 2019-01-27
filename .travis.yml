@@ -1,5 +1,8 @@
 language: java
-sudo: false
+sudo: true
+addons:
+  postgresql: "9.6"
+
 install: true
 
 dist: trusty
@@ -23,6 +26,12 @@ branches:
   only:
     - master
 
+before_script:
+  - psql -c "create database mynotes;" -U postgres
+  - sudo -u postgres psql -c "ALTER ROLE postgres WITH password 'sa'"
+
+services:
+  - postgresql
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
