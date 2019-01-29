@@ -1,38 +1,59 @@
 package ru.bass2000.MyNotes.model.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
-@Entity(name = "User")
+@Entity
 @Table(name = "users")
 public class User {
+    private Long id;
+    private String username;
+    private String password;
+    private String passwordConfirm;
+    private Set<Role> roles;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-    @Column
-    private String login;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @Column
-    private String password;
+    public String getUsername() {
+        return username;
+    }
 
-    @Column
-    private String email;
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    @Column
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_note",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "note_id")}
-    )
-    private List<Note> notes_list = new ArrayList();
+    public String getPassword() {
+        return password;
+    }
 
-    public User(int user_id, String login, String password, String email) {
-        this.login = login;
+    public void setPassword(String password) {
         this.password = password;
-        this.email = email;
+    }
+
+    @Transient
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
